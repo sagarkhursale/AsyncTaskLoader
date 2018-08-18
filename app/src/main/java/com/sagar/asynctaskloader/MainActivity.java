@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
-
+        getSupportLoaderManager().initLoader(GITHUB_SEARCH_LOADER, null, this);
         // end
     }
 
