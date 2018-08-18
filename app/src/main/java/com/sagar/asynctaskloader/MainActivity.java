@@ -45,6 +45,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
+        if (savedInstanceState != null) {
+            String queryUrl = savedInstanceState.getString(SEARCH_QUERY_URL_EXTRA);
+            mUrlDisplayTextView.setText(queryUrl);
+        }
+
         getSupportLoaderManager().initLoader(GITHUB_SEARCH_LOADER, null, this);
         // end
     }
@@ -166,6 +171,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        String queryUrl = mUrlDisplayTextView.getText().toString();
+        outState.putString(SEARCH_QUERY_URL_EXTRA, queryUrl);
     }
 
     // END
