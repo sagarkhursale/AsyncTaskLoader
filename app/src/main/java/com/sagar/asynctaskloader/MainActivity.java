@@ -2,6 +2,8 @@ package com.sagar.asynctaskloader;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,6 +32,23 @@ public class MainActivity extends AppCompatActivity {
         // end
     }
 
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemThatWasClickedId = item.getItemId();
+        if (itemThatWasClickedId == R.id.action_search) {
+            //makeGithubSearchQuery();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     // END
 }
