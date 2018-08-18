@@ -39,11 +39,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSearchBoxEditText =  findViewById(R.id.et_search_box);
-        mUrlDisplayTextView =  findViewById(R.id.tv_url_display);
-        mSearchResultsTextView =  findViewById(R.id.tv_github_search_results_json);
-        mErrorMessageDisplay =  findViewById(R.id.tv_error_message_display);
-        mLoadingIndicator =  findViewById(R.id.pb_loading_indicator);
+        mSearchBoxEditText = findViewById(R.id.et_search_box);
+        mUrlDisplayTextView = findViewById(R.id.tv_url_display);
+        mSearchResultsTextView = findViewById(R.id.tv_github_search_results_json);
+        mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
 
         // end
@@ -100,7 +100,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(@NonNull Loader<String> loader, String data) {
-
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        if (data != null) {
+            mSearchResultsTextView.setText(data);
+        }
     }
 
     @Override
