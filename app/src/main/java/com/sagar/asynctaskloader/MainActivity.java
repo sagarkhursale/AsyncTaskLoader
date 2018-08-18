@@ -50,6 +50,30 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
+    private void makeGithubSearchQuery() {
+        String githubQuery = mSearchBoxEditText.getText().toString();
+
+        if (TextUtils.isEmpty(githubQuery)) {
+            mUrlDisplayTextView.setText("No query entered, nothing to search for.");
+            return;
+        }
+
+        URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
+        mUrlDisplayTextView.setText(githubSearchUrl.toString());
+
+        Bundle queryBundle = new Bundle();
+        queryBundle.putString(SEARCH_QUERY_URL_EXTRA, githubSearchUrl.toString());
+
+        LoaderManager loaderManager = getSupportLoaderManager();
+        Loader<String> githubSearchLoader = loaderManager.getLoader(GITHUB_SEARCH_LOADER);
+        if (githubSearchLoader == null) {
+            loaderManager.initLoader(GITHUB_SEARCH_LOADER, queryBundle, this);
+        } else {
+            loaderManager.restartLoader(GITHUB_SEARCH_LOADER, queryBundle, this);
+        }
+    }
+
+
     @SuppressLint("StaticFieldLeak")
     @NonNull
     @Override
@@ -122,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
         if (itemThatWasClickedId == R.id.action_search) {
-            //makeGithubSearchQuery();
+            makeGithubSearchQuery();
             return true;
         }
         return super.onOptionsItemSelected(item);
