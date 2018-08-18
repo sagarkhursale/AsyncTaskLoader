@@ -1,15 +1,32 @@
 package com.sagar.asynctaskloader;
 
+import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.sagar.asynctaskloader.utilities.NetworkUtils;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.IOException;
+import java.net.URL;
+
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
+
+    private static final String SEARCH_QUERY_URL_EXTRA = "query";
+    private static final int GITHUB_SEARCH_LOADER = 22;
+
     private EditText mSearchBoxEditText;
     private TextView mUrlDisplayTextView;
     private TextView mSearchResultsTextView;
@@ -32,6 +49,64 @@ public class MainActivity extends AppCompatActivity {
         // end
     }
 
+
+    @SuppressLint("StaticFieldLeak")
+    @NonNull
+    @Override
+    public Loader<String> onCreateLoader(int id, @Nullable final Bundle args) {
+        return new AsyncTaskLoader<String>(this) {
+            String mGithubJson;
+
+            @Override
+            protected void onStartLoading() {
+                if (args == null) {
+                    return;
+                }
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+
+                if (mGithubJson != null) {
+                    deliverResult(mGithubJson);
+                } else {
+                    forceLoad();
+                }
+            }
+
+            @Nullable
+            @Override
+            public String loadInBackground() {
+                assert args != null;
+                String searchQueryUrlString = args.getString(SEARCH_QUERY_URL_EXTRA);
+
+                if (searchQueryUrlString == null || TextUtils.isEmpty(searchQueryUrlString)) {
+                    return null;
+                }
+
+                try {
+                    URL githubUrl = new URL(searchQueryUrlString);
+                    return NetworkUtils.getResponseFromHttpUrl(githubUrl);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            public void deliverResult(@Nullable String githubJson) {
+                mGithubJson = githubJson;
+                super.deliverResult(githubJson);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<String> loader) {
+
+    }
 
 
     @Override
