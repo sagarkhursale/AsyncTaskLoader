@@ -74,6 +74,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
+    private void showJsonDataView() {
+        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+
+        mSearchResultsTextView.setVisibility(View.VISIBLE);
+    }
+
+
+    private void showErrorMessage() {
+        mSearchResultsTextView.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
+
+
     @SuppressLint("StaticFieldLeak")
     @NonNull
     @Override
@@ -125,8 +138,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(@NonNull Loader<String> loader, String data) {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
-        if (data != null) {
+        if (null == data) {
+            showErrorMessage();
+        } else {
             mSearchResultsTextView.setText(data);
+            showJsonDataView();
         }
     }
 
